@@ -21,8 +21,10 @@ SRC_DIR			:= src/
 # Source files
 SRC_FILES		+= main.c					# Main
 SRC_FILES		+= input.c					# Input handling
+## SRC_FILES		+= philos.c					# Philo initialization
 SRC_FILES		+= utils/arg_check.c		# Utilities for argument check
 SRC_FILES		+= utils/convert.c			# Utilities to convert different types
+## SRC_FILES		+= utils/error_utils.c		# Utilities to handle errors
 
 # Object files directory
 OBJ_DIR			:= obj/

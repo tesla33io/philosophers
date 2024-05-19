@@ -6,18 +6,25 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/19 18:25:23 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/19 19:50:33 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <bits/pthreadtypes.h>
-# include <stdbool.h>
+# include <bits/pthreadtypes.h> /* pthread_t, pthread_mutex_t, pthread_create(),
+								 * pthread_detach(), pthread_join(),
+								 * pthread_mutex_init(),
+								 * pthread_mutex_destroy(),
+								 * pthread_mutex_lock(), pthread_mutex_unlock()
+								 */
+# include <stdbool.h> /* true, false */
 
 # define SUCCESS 0
 # define FAIL 1
+# define MALLOC_FAIL_MSG "memory allocation failed"
+# define ERR_MALLOC_FAIL 19
 # define NOT_ENOUGH_ARGS_MSG "not enough arguments"
 # define ERR_NOT_ENOUGH_ARGS 20
 # define TOO_MANY_ARGS_MSG "too many arguments"
@@ -29,13 +36,14 @@ struct	s_data;
 
 struct	s_philo
 {
-	struct				*s_data;
+	struct s_data		*s_data;
 	pthread_t			thrd;
+	int					start_time;
 	int					id;
 	int					meals_count;
 	bool				eating;
-	pthread_mutex_t		*right_fork;
-	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		*right_fork_mtx;
+	pthread_mutex_t		*left_fork_mtx;
 };
 
 struct	s_data
@@ -45,8 +53,9 @@ struct	s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_meal_num;
+	struct s_philo		*philos;
 	pthread_t			*tlist;
-	pthread_mutex_t		*forks;
+	pthread_mutex_t		*forks_mtxs;
 };
 
 /* Core functions */
@@ -69,7 +78,23 @@ struct	s_data
  * @param av The argument vector.
  * @return int Error code indicating the validation result.
  */
-int			validate_input(int ac, char *av[]);
+int				validate_input(int ac, char *av[]);
+
+/**
+ * @brief Creates and populates a data structure with program arguments.
+ *
+ * This function dynamically allocates memory for a structure of type 's_data'
+ * and initializes its fields with values extracted from the program arguments.
+ * It expects the program to receive at least four mandatory arguments 
+ * representing numeric values, and an optional fifth argument.
+ *
+ * @param ac The argument count.
+ * @param av The argument vector.
+ * @return struct s_data* A pointer to the newly created 's_data' structure.
+ *                        Returns NULL in case of memory allocation failure or
+ *                        if the number of arguments is insufficient.
+ */
+struct s_data	*save_arguments(int ac, char *av[]);
 
 /* Utility functions */
 
@@ -85,7 +110,7 @@ int			validate_input(int ac, char *av[]);
  * @return int Returns SUCCESS (0) if the string contains only digits, 
  *         otherwise returns FAIL (1).
  */
-int			ft_strisnum(const char *str);
+int				ft_strisnum(const char *str);
 
 /**
  * @brief Converts a string to an integer.
@@ -99,6 +124,6 @@ int			ft_strisnum(const char *str);
  * @param arg The input string to be converted to an integer.
  * @return int The integer value represented by the input string.
  */
-int			ft_atoi(const char *arg);
+int				ft_atoi(const char *arg);
 
 #endif /* PHILO_H */
