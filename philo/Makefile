@@ -19,10 +19,11 @@ TARGET			:= philo
 SRC_DIR			:= src/
 
 # Source files
-SRC_FILES		+= main.c					# Main
-SRC_FILES		+= input.c					# Input handling
-SRC_FILES		+= utils/arg_check.c		# Utilities for argument check
-SRC_FILES		+= utils/convert.c			# Utilities to convert different types
+SRC_FILES		+= main.c
+SRC_FILES		+= input.c
+SRC_FILES		+= utils/arg_check.c
+SRC_FILES		+= utils/convert.c
+SRC_FILES		+= utils/usage.c
 
 # Object files directory
 OBJ_DIR			:= obj/

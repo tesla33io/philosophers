@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/19 17:33:36 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/04 23:04:31 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  */
 int	main(int ac, char *av[])
 {
-	if (validate_input(ac, av) != SUCCESS)
+	if (validate_input(ac, av) != SUCCESS && (print_usage(), 1))
 		return (FAIL);
 	for (int i = 1; i < ac; i++)
 	{

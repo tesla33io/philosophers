@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:44:49 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/19 17:24:49 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/04 23:01:25 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,24 @@
 
 static int	check_arguments(int ac, char *av[]);
 
+/**
+ * @brief Validates program arguments.
+ *
+ * This function checks the number and format of the program arguments. 
+ * It ensures that there are exactly four mandatory arguments and one optional 
+ * argument. The function returns different error codes based on the validation
+ * outcome:
+ * - ERR_NOT_ENOUGH_ARGS (20): If the program has fewer than the required
+ *                             number of arguments.
+ * - ERR_TOO_MANY_ARGS (21): If more arguments are provided than needed.
+ * - ERR_NON_DIGIT_ARG (22): If any of the arguments contain non-digit
+ *                           characters.
+ * - SUCCESS (0): If all arguments are valid.
+ *
+ * @param ac The argument count.
+ * @param av The argument vector.
+ * @return int Error code indicating the validation result.
+ */
 int	validate_input(int ac, char *av[])
 {
 	if (ac < 5)
