@@ -6,14 +6,15 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/04 23:03:03 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/08 22:08:33 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <bits/pthreadtypes.h>
+// # include <bits/pthreadtypes.h>
+# include <pthread.h>
 # include <stdbool.h>
 
 # define SUCCESS 0
@@ -26,10 +27,20 @@
 # define ERR_NON_DIGIT_ARG 22
 
 typedef struct	s_data t_data;
+typedef struct	s_philo t_philo;
+
+enum	e_status
+{
+	EATING,
+	SLEEPING,
+	THINKING,
+	DEAD
+};
 
 struct	s_philo
 {
 	t_data				*data;
+	enum e_status		status;
 	pthread_t			thrd;
 	int					id;
 	int					meals_count;
@@ -45,18 +56,24 @@ struct	s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_meal_num;
-	pthread_t			*tlist;
+	pthread_mutex_t		print_lock;
+	struct s_philo		**philos;
 	pthread_mutex_t		*forks;
 };
 
 /* Core functions */
 
 int			validate_input(int ac, char *av[]);
+int			initialize_philos(t_data *data);
 
 /* Utility functions */
 
 int			ft_strisnum(const char *str);
 int			ft_atoi(const char *arg);
 void		print_usage(void);
+
+/* Debug functions */
+
+void		print_data(t_data *data);
 
 #endif /* PHILO_H */

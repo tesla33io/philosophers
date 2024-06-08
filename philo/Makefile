@@ -20,10 +20,12 @@ SRC_DIR			:= src/
 
 # Source files
 SRC_FILES		+= main.c
-SRC_FILES		+= input.c
+SRC_FILES		+= core/input.c
+SRC_FILES		+= core/init.c
 SRC_FILES		+= utils/arg_check.c
 SRC_FILES		+= utils/convert.c
 SRC_FILES		+= utils/usage.c
+SRC_FILES		+= utils/debug.c
 
 # Object files directory
 OBJ_DIR			:= obj/
