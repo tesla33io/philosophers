@@ -1,7 +1,6 @@
 # Local
 .vscode/
 .obsidian/
-philo
 
 # Prerequisites
 *.d
