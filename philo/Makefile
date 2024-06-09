@@ -46,24 +46,7 @@ RM				:= /bin/rm -f
 MKDIR			:= /bin/mkdir -p
 TOUCH			:= /bin/touch
 
-## $(1) - Color of the message type
-## $(2) - Message type
-## $(3) - Main message text (in bold)
-## $(4) - Additional info
-## $(5) - Color of the message text
-define	PRINT
-	@echo "$(strip $(1))[$(TARGET) -" \
-	"$(shell printf '%6s' $(strip $(2)))]:$(strip $(5))" \
-	"$(BOLD)$(strip $(3))$(RESET) $(strip $(5))$(strip $(4))$(RESET)"	
-endef
-
 #### LOCAL LIBRARIES ####
-
-## FT_PRINTF_PATH	:= ft_printf/
-## FT_PRINTF_LIB	:= $(FT_PRINTF_PATH)libftprintf.a
-
-## LIBFT_PATH		:= lib/libft/
-## LIBFT_LIB		:= $(LIBFT_PATH)libft.a
 
 #### DEBUG SETTINGS ####
 
@@ -80,39 +63,32 @@ all: $(TARGET) ## Build this project
 # Compilation rule for object files
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(MKDIR) $(@D)
-	$(call PRINT, $(CYAN), "build", "compiling", "$@", $(CYAN))
-	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
+	@echo -n "[build] "
+	$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
 $(TARGET): $(OBJ_FILES)
-	$(call PRINT, $(GREEN), "build", "🔗 linking", "-- $(TARGET)", $(GREEN))
-	@$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
-	$(call PRINT, $(GREEN), "info", "✨ Build finished!")
+	@echo -n "\n[link] "
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
 	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
 
 #### LOCAL LIBS COMPILATION ####
 
-## $(FT_PRINTF_LIB):
-## 	@$(MAKE) -sC $(FT_PRINTF_PATH)
-
-## $(LIBFT_LIB):
-## 	@$(MAKE) -C $(LIBFT_PATH)
-
 #### ADDITIONAL RULES ####
 
 clean: ## Clean objects and dependencies
-	@$(RM) $(OBJ_FILES)
-	@$(RM) -r $(OBJ_DIR)
-	$(call PRINT, $(YELLOW), "clean", "Remove objects", $(YELLOW))
-	@$(RM) $(DEPENDS)
-	@$(RM) -r $(DEP_DIR)
-	$(call PRINT, $(YELLOW), "clean", "Remove dependencies", $(YELLOW))
-## 	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) clean) ||:
+	@echo -n "[clean] "
+	$(RM) $(OBJ_FILES)
+	@echo -n "[clean] "
+	$(RM) -r $(OBJ_DIR)
+	@echo -n "[clean] "
+	$(RM) $(DEPENDS)
+	@echo -n "[clean] "
+	$(RM) -r $(DEP_DIR)
 
 fclean: clean ## Restore project to initial state
-	@$(RM) $(TARGET)
-	$(call PRINT, $(YELLOW), "fclean", "Remove \`$(TARGET)\`", $(YELLOW))
-## 	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) fclean) ||:
+	@echo -n "[fclean] "
+	$(RM) $(TARGET)
 
 re: fclean all ## Rebuild project
 
