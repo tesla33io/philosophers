@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/09 14:39:03 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/09 17:58:02 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ struct	s_philo
 	pthread_t			thrd;
 	int					id;
 	int					meals_count;
-	bool				eating;
 	pthread_mutex_t		*right_fork;
 	pthread_mutex_t		*left_fork;
 };
@@ -58,7 +57,7 @@ struct	s_data
 	int					max_meal_num;
 	pthread_mutex_t		print_lock;
 	struct s_philo		**philos;
-	pthread_mutex_t		*forks;
+	pthread_mutex_t		**forks;
 };
 
 /* Core functions */
