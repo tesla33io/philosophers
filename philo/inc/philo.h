@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/08 22:08:33 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:39:03 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 # define NON_DIGIT_ARG_MSG "argument contains non-digit chracter(s)"
 # define ERR_NON_DIGIT_ARG 22
 
-typedef struct	s_data t_data;
-typedef struct	s_philo t_philo;
+typedef struct s_data	t_data;
+typedef struct s_philo	t_philo;
 
 enum	e_status
 {
