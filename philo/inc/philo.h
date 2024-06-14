@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/09 17:58:02 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:44:37 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 // # include <bits/pthreadtypes.h>
 # include <pthread.h>
 # include <stdbool.h>
+#include <time.h>
 
 # define SUCCESS 0
 # define FAIL 1
@@ -29,7 +30,7 @@
 typedef struct s_data	t_data;
 typedef struct s_philo	t_philo;
 
-enum	e_status
+enum	e_state
 {
 	EATING,
 	SLEEPING,
@@ -40,7 +41,7 @@ enum	e_status
 struct	s_philo
 {
 	t_data				*data;
-	enum e_status		status;
+	enum e_state		state;
 	pthread_t			thrd;
 	int					id;
 	int					meals_count;
@@ -55,6 +56,7 @@ struct	s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_meal_num;
+	time_t				start_time;
 	pthread_mutex_t		print_lock;
 	struct s_philo		**philos;
 	pthread_mutex_t		**forks;
@@ -64,12 +66,15 @@ struct	s_data
 
 int			validate_input(int ac, char *av[]);
 int			initialize_philos(t_data *data);
+void		log_state(t_philo *philo);
+void		log_action(t_philo *philo, char *act);
 
 /* Utility functions */
 
 int			ft_strisnum(const char *str);
 int			ft_atoi(const char *arg);
 void		print_usage(void);
+time_t		timestamp(void);
 
 /* Debug functions */
 

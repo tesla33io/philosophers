@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:51:07 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/09 18:20:05 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:45:30 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	initialize_forks(t_data	*data)
 static void	assign_values_to_philo(t_data *data, t_philo *philo, int i)
 {
 	philo->data = data;
-	philo->status = THINKING;
+	philo->state = THINKING;
 	philo->id = i;
 	philo->meals_count = 0;
 	if (i < data->philo_n_fork_num - 1)
@@ -87,7 +87,7 @@ static void	*say_hi(void *philo_ref)
 
 	philo = philo_ref;
 	pthread_mutex_lock(&philo->data->print_lock);
-	printf("Philo [%d] status - %d\n", philo->id, philo->status);
+	printf("Philo [%d] status - %d\n", philo->id, philo->state);
 	printf("L_fork addr: %s%p%s | R_fork addr: %s%p%s\n",
 		GRN, (void *) philo->left_fork, R, YEL, (void *) philo->right_fork, R);
 	pthread_mutex_unlock(&philo->data->print_lock);

@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/08 22:09:01 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:30:27 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <time.h>
 
 /*
  * The only true wisdom is in knowing you know nothing.
@@ -38,6 +39,7 @@ int	main(int ac, char *av[])
 		return (dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__));
 	if (ac == 6)
 		data->max_meal_num = ft_atoi(av[5]);
+	data->start_time = timestamp();
 	initialize_philos(data);
 	return (ac);
 }
