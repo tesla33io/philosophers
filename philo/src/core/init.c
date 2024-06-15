@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:51:07 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/14 16:45:30 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/15 22:23:48 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-static void	*say_hi(void *philo_ref);
 static int	initialize_forks(t_data	*data);
 static void	assign_values_to_philo(t_data *data, t_philo *philo, int i);
 
@@ -40,8 +39,6 @@ int	initialize_philos(t_data *data)
 		if (!philo)
 			return (dprintf(2, "malloc failed at %s:%d\n", __FILE__, __LINE__));
 		assign_values_to_philo(data, philo, i);
-		pthread_create(&philo->thrd, NULL, say_hi, (void *) philo);
-		pthread_join(philo->thrd, NULL);
 		i++;
 	}
 	return (0);
@@ -81,7 +78,7 @@ static void	assign_values_to_philo(t_data *data, t_philo *philo, int i)
 	data->philos[i] = philo;
 }
 
-static void	*say_hi(void *philo_ref)
+/*static void	*say_hi(void *philo_ref)
 {
 	t_philo	*philo;
 
@@ -92,4 +89,4 @@ static void	*say_hi(void *philo_ref)
 		GRN, (void *) philo->left_fork, R, YEL, (void *) philo->right_fork, R);
 	pthread_mutex_unlock(&philo->data->print_lock);
 	return (NULL);
-}
+}*/

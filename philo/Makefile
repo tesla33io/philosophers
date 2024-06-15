@@ -24,6 +24,7 @@ SRC_FILES		+= main.c
 SRC_FILES		+= core/input.c
 SRC_FILES		+= core/init.c
 SRC_FILES		+= core/logger.c
+SRC_FILES		+= core/routine.c
 
 SRC_FILES		+= utils/arg_check.c
 SRC_FILES		+= utils/convert.c
