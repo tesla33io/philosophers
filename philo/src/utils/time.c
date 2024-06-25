@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 15:58:24 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/16 16:55:51 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/25 21:32:53 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 time_t	timestamp(void)
 {
-	struct	timeval	tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
@@ -43,7 +43,7 @@ int	wait_for(time_t wait_time, t_philo *philo)
 			return (1);
 		}
 		if (time_diff >= philo->data->time_to_die
-				|| timestamp() - philo->last_meal_time >= philo->data->time_to_die)
+			|| timestamp() - philo->last_meal_time >= philo->data->time_to_die)
 		{
 			pthread_mutex_unlock(&philo->data->death_lock);
 			starvation_time(philo);

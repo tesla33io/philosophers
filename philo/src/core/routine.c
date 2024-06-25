@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/16 18:18:43 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/25 23:04:59 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <stdio.h> /* printf() */
 
-void	*philo_routine(void* philo_ref)
+void	*philo_routine(void *philo_ref)
 {
 	t_philo	*philo;
 
@@ -40,20 +40,20 @@ void	*philo_routine(void* philo_ref)
 
 void	mealtime(t_philo *philo)
 {
-	if (philo->data->someone_died)
+	if (philo->data->someone_died || philo->meals_count >= philo->data->max_meal_num)
 		return ;
 	if (philo->id % 2 == 0)
 	{
-        pthread_mutex_lock(&(*philo->left_fork));
-        log_action(philo, FORK_TAKEN_MSG);
-        pthread_mutex_lock(&(*philo->right_fork));
-    }
+		pthread_mutex_lock(&(*philo->left_fork));
+		log_action(philo, FORK_TAKEN_MSG);
+		pthread_mutex_lock(&(*philo->right_fork));
+	}
 	else
 	{
-        pthread_mutex_lock(&(*philo->right_fork));
-        log_action(philo, FORK_TAKEN_MSG);
-        pthread_mutex_lock(&(*philo->left_fork));
-    }
+		pthread_mutex_lock(&(*philo->right_fork));
+		log_action(philo, FORK_TAKEN_MSG);
+		pthread_mutex_lock(&(*philo->left_fork));
+	}
 	log_action(philo, FORK_TAKEN_MSG);
 	philo->state = EATING;
 	log_state(philo);

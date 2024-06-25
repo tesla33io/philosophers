@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/15 22:05:55 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/25 21:33:36 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int			initialize_philos(t_data *data);
 void		log_state(t_philo *philo);
 void		log_action(t_philo *philo, char *act);
 
-void		*philo_routine(void* philo_ref);
+void		*philo_routine(void *philo_ref);
 void		mealtime(t_philo *philo);
 void		starvation_time(t_philo *philo);
 
