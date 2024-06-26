@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:51:07 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/15 22:23:48 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:57:33 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,7 @@ static void	assign_values_to_philo(t_data *data, t_philo *philo, int i)
 	philo->state = THINKING;
 	philo->id = i;
 	philo->meals_count = 0;
-	if (i < data->philo_n_fork_num - 1)
-		philo->right_fork = data->forks[i + 1];
-	else
-		philo->right_fork = data->forks[0];
+	philo->right_fork = data->forks[(i + 1) % data->philo_n_fork_num];
 	philo->left_fork = data->forks[i];
 	data->philos[i] = philo;
 }
-
-/*static void	*say_hi(void *philo_ref)
-{
-	t_philo	*philo;
-
-	philo = philo_ref;
-	pthread_mutex_lock(&philo->data->print_lock);
-	printf("Philo [%d] status - %d\n", philo->id, philo->state);
-	printf("L_fork addr: %s%p%s | R_fork addr: %s%p%s\n",
-		GRN, (void *) philo->left_fork, R, YEL, (void *) philo->right_fork, R);
-	pthread_mutex_unlock(&philo->data->print_lock);
-	return (NULL);
-}*/
