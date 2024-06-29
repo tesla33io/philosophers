@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/25 21:33:36 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/27 21:52:20 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ struct	s_data
 	int					full_philo_n;
 	pthread_mutex_t		print_lock;
 	pthread_mutex_t		death_lock;
+	pthread_mutex_t		write_lock;
 	struct s_philo		**philos;
 	pthread_mutex_t		**forks;
 };

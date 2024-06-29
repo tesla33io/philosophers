@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/25 23:04:59 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/27 22:17:48 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,15 @@ void	*philo_routine(void *philo_ref)
 
 	philo = philo_ref;
 	if (philo->id % 2)
-		usleep(100);
+		wait_for(50, philo);
 	while (!philo->data->someone_died)
 	{
-		mealtime(philo);
-		if (philo->data->full_philo_n == philo->data->philo_n_fork_num)
-			break ;
+		pthread_mutex_lock(&philo->data->write_lock);
+		if (philo->data->full_philo_n < philo->data->philo_n_fork_num
+				&& (pthread_mutex_unlock(&philo->data->write_lock), 1))
+			mealtime(philo);
+		else
+			pthread_mutex_unlock(&philo->data->write_lock);
 		philo->state = SLEEPING;
 		log_state(philo);
 		if (wait_for(philo->data->time_to_sleep, philo) != 0)
@@ -60,8 +63,10 @@ void	mealtime(t_philo *philo)
 	philo->last_meal_time = timestamp();
 	wait_for(philo->data->time_to_eat, philo);
 	philo->meals_count++;
+	pthread_mutex_lock(&philo->data->write_lock);
 	if (philo->meals_count == philo->data->max_meal_num)
 		philo->data->full_philo_n++;
+	pthread_mutex_unlock(&philo->data->write_lock);
 	philo->state = THINKING;
 	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));

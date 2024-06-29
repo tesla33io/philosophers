@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/16 17:23:08 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:46:18 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	main(int ac, char *av[])
 	if (pthread_mutex_init(&data->print_lock, NULL) != 0)
 		return (dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__));
 	if (pthread_mutex_init(&data->death_lock, NULL) != 0)
+		return (dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__));
+	if (pthread_mutex_init(&data->write_lock, NULL) != 0)
 		return (dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__));
 	if (ac == 6)
 		data->max_meal_num = ft_atoi(av[5]);
