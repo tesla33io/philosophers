@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 15:58:24 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/25 21:32:53 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/06/27 21:54:35 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	wait_for(time_t wait_time, t_philo *philo)
 	time_diff = timestamp() - stime;
 	while (time_diff < wait_time)
 	{
-		usleep(100);
+		usleep(50);
 		time_diff = timestamp() - stime;
 		pthread_mutex_lock(&philo->data->death_lock);
 		if (philo->data->someone_died)
