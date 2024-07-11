@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/27 21:52:20 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:15:33 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define FORK_TAKEN_MSG "has taken a fork"
 # define DIED_MSG "died"
 
-typedef struct s_data	t_data;
+typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 
 enum	e_state
@@ -40,46 +40,59 @@ enum	e_state
 	DEAD
 };
 
+typedef enum e_state	t_state;
+
 struct	s_philo
 {
-	t_data				*data;
-	enum e_state		state;
+	t_table				*table;
+	t_state				state;
 	pthread_t			thrd;
 	int					id;
 	int					meals_count;
 	time_t				last_meal_time;
 	pthread_mutex_t		*right_fork;
 	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		p_write_lock;
+	pthread_mutex_t		p_state_lock;
 };
 
-struct	s_data
+struct	s_table
 {
-	int					philo_n_fork_num;
-	time_t				time_to_die;
-	time_t				time_to_eat;
-	time_t				time_to_sleep;
-	time_t				start_time;
-	int					max_meal_num;
+	int					philo_n;
+	time_t				t_die;
+	time_t				t_eat;
+	time_t				t_sleep;
+	time_t				t_start;
+	int					max_meal_n;
 	bool				someone_died;
 	int					full_philo_n;
 	pthread_mutex_t		print_lock;
 	pthread_mutex_t		death_lock;
 	pthread_mutex_t		write_lock;
+	pthread_mutex_t		ready_lock;
 	struct s_philo		**philos;
 	pthread_mutex_t		**forks;
+	pthread_t			monitor_thrd;
 };
 
 /* Core functions */
 
 int			validate_input(int ac, char *av[]);
-int			initialize_philos(t_data *data);
+int			initialize_philos(t_table *table);
 
-void		log_state(t_philo *philo);
+void		log_state(t_philo *philo, t_state state);
 void		log_action(t_philo *philo, char *act);
+time_t		p_get_last_meal_t(t_philo *philo);
+void		p_set_last_meal_t(t_philo *philo, time_t time);
+bool		check_if_someone_died(t_table *table);
+t_state		p_get_state(t_philo *philo);
+void		p_set_state(t_philo *philo, t_state state);
 
+void		*wake_up_big_brother(void *table_ref);
 void		*philo_routine(void *philo_ref);
 void		mealtime(t_philo *philo);
 void		starvation_time(t_philo *philo);
+void		take_forks(t_philo *philo, t_table *table);
 
 /* Utility functions */
 
@@ -87,10 +100,11 @@ int			ft_strisnum(const char *str);
 int			ft_atoi(const char *arg);
 void		print_usage(void);
 time_t		timestamp(void);
-int			wait_for(time_t wait_time, t_philo *philo);
+int			wait_for(time_t wait_time, t_philo *philo, bool extra);
 
 /* Debug functions */
 
-void		print_data(t_data *data);
+void		print_table(t_table *table);
+void		print_philo(t_philo *philo);
 
 #endif /* PHILO_H */

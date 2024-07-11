@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/06/27 22:17:48 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:16:21 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <pthread.h>
 #include <unistd.h>
+#include <stdlib.h> /* TODO: DELETE */
 #include <stdio.h> /* printf() */
 
 void	*philo_routine(void *philo_ref)
@@ -21,29 +22,29 @@ void	*philo_routine(void *philo_ref)
 	t_philo	*philo;
 
 	philo = philo_ref;
-	if (philo->id % 2)
-		wait_for(50, philo);
-	while (!philo->data->someone_died)
+	if (philo->id % 2 == 0)
+		wait_for(10, philo, false);
+	p_set_last_meal_t(philo, timestamp());
+	while (!philo->table->someone_died)
 	{
-		pthread_mutex_lock(&philo->data->write_lock);
-		if (philo->data->full_philo_n < philo->data->philo_n_fork_num
-				&& (pthread_mutex_unlock(&philo->data->write_lock), 1))
-			mealtime(philo);
-		else
-			pthread_mutex_unlock(&philo->data->write_lock);
-		philo->state = SLEEPING;
-		log_state(philo);
-		if (wait_for(philo->data->time_to_sleep, philo) != 0)
+		mealtime(philo);
+		log_state(philo, SLEEPING);
+		pthread_mutex_lock(&philo->table->write_lock);
+		if (philo->table->full_philo_n == philo->table->philo_n)
+		{
+			pthread_mutex_unlock(&philo->table->write_lock);
 			break ;
-		philo->state = THINKING;
-		log_state(philo);
+		}
+		pthread_mutex_unlock(&philo->table->write_lock);
+		wait_for(philo->table->t_sleep, philo, true);
+		log_state(philo, THINKING);
 	}
 	return (NULL);
 }
 
 void	mealtime(t_philo *philo)
 {
-	if (philo->data->someone_died || philo->meals_count >= philo->data->max_meal_num)
+	if (philo->table->someone_died)
 		return ;
 	if (philo->id % 2 == 0)
 	{
@@ -58,52 +59,28 @@ void	mealtime(t_philo *philo)
 		pthread_mutex_lock(&(*philo->left_fork));
 	}
 	log_action(philo, FORK_TAKEN_MSG);
-	philo->state = EATING;
-	log_state(philo);
-	philo->last_meal_time = timestamp();
-	wait_for(philo->data->time_to_eat, philo);
+	log_state(philo, EATING);
+	p_set_last_meal_t(philo, timestamp());
 	philo->meals_count++;
-	pthread_mutex_lock(&philo->data->write_lock);
-	if (philo->meals_count == philo->data->max_meal_num)
-		philo->data->full_philo_n++;
-	pthread_mutex_unlock(&philo->data->write_lock);
-	philo->state = THINKING;
+	wait_for(philo->table->t_eat, philo, true);
+	pthread_mutex_lock(&philo->table->write_lock);
+	if (philo->meals_count == philo->table->max_meal_n)
+		philo->table->full_philo_n++;
+	pthread_mutex_unlock(&philo->table->write_lock);
 	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));
+	p_set_state(philo, THINKING);
 }
 
 void	starvation_time(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->death_lock);
-	if (philo->data->someone_died)
+	pthread_mutex_lock(&philo->table->death_lock);
+	if (philo->table->someone_died)
 	{
-		pthread_mutex_unlock(&philo->data->death_lock);
+		pthread_mutex_unlock(&philo->table->death_lock);
 		return ;
 	}
 	log_action(philo, DIED_MSG);
-	philo->data->someone_died = true;
-	pthread_mutex_unlock(&philo->data->death_lock);
+	philo->table->someone_died = true;
+	pthread_mutex_unlock(&philo->table->death_lock);
 }
-
-/*
-static void	take_forks(t_philo *philo)
-{
-	int	id_prev;
-	int	id_next;
-
-	id_prev = philo->id - 1;
-	id_next = philo->id + 1;
-	if (id_prev < 0)
-		id_prev = philo->data->philo_n_fork_num - id_prev;
-	if (id_next > philo->data->philo_n_fork_num)
-		id_next = id_next - philo->data->philo_n_fork_num;
-	if (philo->data->philos[id_prev]->state != EATING
-			&& philo->data->philos[id_next]->state != EATING)
-	{
-		pthread_mutex_lock(&(*philo->left_fork));
-        log_action(philo, FORK_TAKEN_MSG);
-		pthread_mutex_lock(&(*philo->right_fork));
-        log_action(philo, FORK_TAKEN_MSG);
-	}
-}
-*/
