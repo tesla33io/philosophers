@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 17:29:48 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 17:19:36 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/14 19:53:54 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	*wake_up_big_brother(void *table_ref)
 	while (1)
 	{
 		ret = check_for_starvation(table);
-		// printf("[d]:: ret - 1: %d\n", ret - 1);
 		if (ret != 0)
 		{
 			// printf("BIG BRO\n");
@@ -53,12 +52,12 @@ static int	check_for_starvation(t_table *table)
 	i = 0;
 	while (i < table->philo_n)
 	{
-		t_diff = timestamp() - p_get_last_meal_t(table->philos[i]);
-		// printf("\n\n[pid: %i]:: %ld - %ld", table->philos[i]->id + 1,
-				// timestamp(), p_get_last_meal_t(table->philos[i]));
-		// printf(" = %ld\n", t_diff);
-		if (table->philos[i]->state == DEAD || t_diff >= table->t_die)
-			return (i + 1);
+		if (p_get_last_meal_t(table->philos[i]) > 0)
+		{
+			t_diff = timestamp() - p_get_last_meal_t(table->philos[i]);
+			if (table->philos[i]->state == DEAD || t_diff >= table->t_die)
+				return (i + 1);
+		}
 		i++;
 	}
 	return (0);

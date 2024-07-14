@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 19:16:21 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/14 20:18:12 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,10 @@ void	*philo_routine(void *philo_ref)
 	{
 		mealtime(philo);
 		log_state(philo, SLEEPING);
-		pthread_mutex_lock(&philo->table->write_lock);
-		if (philo->table->full_philo_n == philo->table->philo_n)
-		{
-			pthread_mutex_unlock(&philo->table->write_lock);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->table->write_lock);
 		wait_for(philo->table->t_sleep, philo, true);
 		log_state(philo, THINKING);
+		if (are_all_philos_done(philo->table) == true)
+			break ;
 	}
 	return (NULL);
 }
@@ -62,11 +57,8 @@ void	mealtime(t_philo *philo)
 	log_state(philo, EATING);
 	p_set_last_meal_t(philo, timestamp());
 	philo->meals_count++;
-	wait_for(philo->table->t_eat, philo, true);
-	pthread_mutex_lock(&philo->table->write_lock);
-	if (philo->meals_count == philo->table->max_meal_n)
-		philo->table->full_philo_n++;
-	pthread_mutex_unlock(&philo->table->write_lock);
+	wait_for(philo->table->t_eat - 1, philo, true);
+	update_full_philos(philo, philo->table);
 	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));
 	p_set_state(philo, THINKING);

@@ -33,6 +33,7 @@ SRC_FILES		+= utils/convert.c
 SRC_FILES		+= utils/usage.c
 SRC_FILES		+= utils/debug.c
 SRC_FILES		+= utils/time.c
+SRC_FILES		+= utils/table_utils.c
 
 # Object files directory
 OBJ_DIR			:= obj/

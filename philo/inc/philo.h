@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 19:15:33 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/14 20:15:44 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ int			ft_atoi(const char *arg);
 void		print_usage(void);
 time_t		timestamp(void);
 int			wait_for(time_t wait_time, t_philo *philo, bool extra);
+bool		are_all_philos_done(t_table *table);
+void		update_full_philos(t_philo *philo, t_table *table);
 
 /* Debug functions */
 

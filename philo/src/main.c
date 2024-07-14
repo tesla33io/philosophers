@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:23 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 18:55:17 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/07/12 20:21:29 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,22 @@ static int	start_simulation(t_table *table)
 		return (-1);
 	table->t_start = timestamp();
 	pthread_mutex_lock(&table->ready_lock);
-//	pthread_create(&table->monitor_thrd, NULL,
-//			wake_up_big_brother, (void *) table);
 	while (i < table->philo_n)
 	{
 		pthread_create(&table->philos[i]->thrd, NULL, philo_routine,
 			(void *) table->philos[i]);
 		i++;
 	}
+	pthread_create(&table->monitor_thrd, NULL,
+		wake_up_big_brother, (void *) table);
 	pthread_mutex_unlock(&table->ready_lock);
 	i = 0;
 	while (i < table->philo_n)
 	{
 		pthread_join(table->philos[i]->thrd, NULL);
 		i++;
-	//	if (i == table->philo_n)
-	//		pthread_join(table->monitor_thrd, NULL);
+	if (i == table->philo_n)
+		pthread_join(table->monitor_thrd, NULL);
 	}
 	return (0);
 }
