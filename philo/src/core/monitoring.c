@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 17:29:48 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/14 19:53:54 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:43:43 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdio.h> /* TODO: DELETE */
 
 static int	check_for_starvation(t_table *table);
+static int	stop_simulation(t_table *table);
 
 /* Initialize monitoring thread */
 void	*wake_up_big_brother(void *table_ref)
@@ -32,14 +33,18 @@ void	*wake_up_big_brother(void *table_ref)
 		ret = check_for_starvation(table);
 		if (ret != 0)
 		{
-			// printf("BIG BRO\n");
-			// printf("[d]:: LMT: %ld\n", p_get_last_meal_t(table->philos[ret - 1]));
 			starvation_time(table->philos[ret - 1]);
 			return (NULL);
 		}
+		pthread_mutex_lock(&table->write_lock);
 		if (table->full_philo_n >= table->philo_n)
-			break ; /* stop simulation */
-		usleep(50);
+		{
+			pthread_mutex_unlock(&table->write_lock);
+			stop_simulation(table);
+			break ;
+		}
+		pthread_mutex_unlock(&table->write_lock);
+		usleep(10);
 	}
 	return (NULL);
 }
@@ -55,10 +60,23 @@ static int	check_for_starvation(t_table *table)
 		if (p_get_last_meal_t(table->philos[i]) > 0)
 		{
 			t_diff = timestamp() - p_get_last_meal_t(table->philos[i]);
-			if (table->philos[i]->state == DEAD || t_diff >= table->t_die)
+			if (p_get_state(table->philos[i]) == DEAD || t_diff >= table->t_die)
 				return (i + 1);
 		}
 		i++;
 	}
 	return (0);
+}
+
+static int	stop_simulation(t_table *table)
+{
+	int	err;
+	int	i;
+
+	err = 0;
+	i = 0;
+	while (i < table->philo_n)
+		err |= pthread_detach(table->philos[i]->thrd);
+	err |= destroy_table(table);
+	return (err);
 }

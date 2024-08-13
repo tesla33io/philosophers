@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/14 20:15:44 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:10:23 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void		*philo_routine(void *philo_ref);
 void		mealtime(t_philo *philo);
 void		starvation_time(t_philo *philo);
 void		take_forks(t_philo *philo, t_table *table);
+void		*alone_philo_simulation(t_philo *philo);
 
 /* Utility functions */
 
@@ -103,6 +104,10 @@ time_t		timestamp(void);
 int			wait_for(time_t wait_time, t_philo *philo, bool extra);
 bool		are_all_philos_done(t_table *table);
 void		update_full_philos(t_philo *philo, t_table *table);
+size_t		ft_strlen(const char *s);
+int			mutex_init_failed(char *file, char *func);
+int			destroy_philo(t_philo *philo);
+int			destroy_table(t_table *table);
 
 /* Debug functions */
 

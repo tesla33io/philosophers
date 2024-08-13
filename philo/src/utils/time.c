@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 15:58:24 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 18:33:03 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/13 22:05:05 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,8 @@ time_t	timestamp(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	wait_for(time_t wait_time, t_philo *philo, bool extra)
+int	wait_for(time_t wait_time, t_philo *phl, bool extra)
 {
-	(void)philo;
 	time_t	stime;
 	time_t	time_diff;
 
@@ -37,17 +36,17 @@ int	wait_for(time_t wait_time, t_philo *philo, bool extra)
 	time_diff = timestamp() - stime;
 	while (time_diff < wait_time)
 	{
-		usleep(50);
+		usleep(10);
 		time_diff = timestamp() - stime;
-		pthread_mutex_lock(&philo->table->death_lock);
-		if (extra && (time_diff >= philo->table->t_die
-			|| timestamp() - p_get_last_meal_t(philo) >= philo->table->t_die))
+		pthread_mutex_lock(&phl->table->death_lock);
+		if (extra && (time_diff >= phl->table->t_die
+				|| timestamp() - p_get_last_meal_t(phl) >= phl->table->t_die))
 		{
-			pthread_mutex_unlock(&philo->table->death_lock);
-			starvation_time(philo);
+			pthread_mutex_unlock(&phl->table->death_lock);
+			starvation_time(phl);
 			return (1);
 		}
-		pthread_mutex_unlock(&philo->table->death_lock);
+		pthread_mutex_unlock(&phl->table->death_lock);
 	}
 	return (0);
 }

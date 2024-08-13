@@ -4,7 +4,7 @@
 CC				:= cc
 
 # Compiler flags
-CFLAGS			:= -Wall -Werror -Wextra -pedantic -O3
+CFLAGS			:= -Wall -Werror -Wextra -pedantic -O3 -pthread
 
 # Libraries to be linked (if any)
 LIBS			:=
@@ -27,6 +27,8 @@ SRC_FILES		+= core/logger.c
 SRC_FILES		+= core/routine.c
 SRC_FILES		+= core/philo.c
 SRC_FILES		+= core/monitoring.c
+SRC_FILES		+= core/alone.c
+SRC_FILES		+= core/cleanup.c
 
 SRC_FILES		+= utils/arg_check.c
 SRC_FILES		+= utils/convert.c
@@ -34,6 +36,8 @@ SRC_FILES		+= utils/usage.c
 SRC_FILES		+= utils/debug.c
 SRC_FILES		+= utils/time.c
 SRC_FILES		+= utils/table_utils.c
+SRC_FILES		+= utils/error.c
+SRC_FILES		+= utils/misc.c
 
 # Object files directory
 OBJ_DIR			:= obj/

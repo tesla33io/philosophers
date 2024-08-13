@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/14 20:18:12 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:41:34 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include <pthread.h>
 #include <unistd.h>
-#include <stdlib.h> /* TODO: DELETE */
 #include <stdio.h> /* printf() */
 
 void	*philo_routine(void *philo_ref)
@@ -22,6 +21,8 @@ void	*philo_routine(void *philo_ref)
 	t_philo	*philo;
 
 	philo = philo_ref;
+	if (philo->table->philo_n == 1)
+		return (alone_philo_simulation(philo));
 	if (philo->id % 2 == 0)
 		wait_for(10, philo, false);
 	p_set_last_meal_t(philo, timestamp());
@@ -29,10 +30,10 @@ void	*philo_routine(void *philo_ref)
 	{
 		mealtime(philo);
 		log_state(philo, SLEEPING);
-		wait_for(philo->table->t_sleep, philo, true);
-		log_state(philo, THINKING);
 		if (are_all_philos_done(philo->table) == true)
 			break ;
+		wait_for(philo->table->t_sleep, philo, true);
+		log_state(philo, THINKING);
 	}
 	return (NULL);
 }
@@ -57,8 +58,8 @@ void	mealtime(t_philo *philo)
 	log_state(philo, EATING);
 	p_set_last_meal_t(philo, timestamp());
 	philo->meals_count++;
-	wait_for(philo->table->t_eat - 1, philo, true);
 	update_full_philos(philo, philo->table);
+	wait_for(philo->table->t_eat - 1, philo, true);
 	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));
 	p_set_state(philo, THINKING);

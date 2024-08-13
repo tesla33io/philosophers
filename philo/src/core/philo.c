@@ -6,15 +6,13 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 19:38:09 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/11 18:47:35 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:29:57 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/philo.h"
 #include <pthread.h>
 #include <time.h>
-
-#include <stdio.h> /* TODO: DELETE */
 
 time_t	p_get_last_meal_t(t_philo *philo)
 {
