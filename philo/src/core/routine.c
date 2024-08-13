@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/11 22:41:34 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/13 22:49:11 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	*philo_routine(void *philo_ref)
 	if (philo->id % 2 == 0)
 		wait_for(10, philo, false);
 	p_set_last_meal_t(philo, timestamp());
-	while (!philo->table->someone_died)
+	while (!someone_died(philo->table))
 	{
 		mealtime(philo);
 		log_state(philo, SLEEPING);
@@ -40,7 +40,7 @@ void	*philo_routine(void *philo_ref)
 
 void	mealtime(t_philo *philo)
 {
-	if (philo->table->someone_died)
+	if (someone_died(philo->table))
 		return ;
 	if (philo->id % 2 == 0)
 	{
@@ -59,7 +59,7 @@ void	mealtime(t_philo *philo)
 	p_set_last_meal_t(philo, timestamp());
 	philo->meals_count++;
 	update_full_philos(philo, philo->table);
-	wait_for(philo->table->t_eat - 1, philo, true);
+	wait_for(philo->table->t_eat, philo, true);
 	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));
 	p_set_state(philo, THINKING);
@@ -67,13 +67,10 @@ void	mealtime(t_philo *philo)
 
 void	starvation_time(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->death_lock);
-	if (philo->table->someone_died)
-	{
-		pthread_mutex_unlock(&philo->table->death_lock);
+	if (someone_died(philo->table))
 		return ;
-	}
 	log_action(philo, DIED_MSG);
+	pthread_mutex_lock(&philo->table->death_lock);
 	philo->table->someone_died = true;
 	pthread_mutex_unlock(&philo->table->death_lock);
 }

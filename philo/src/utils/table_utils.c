@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 20:09:08 by astavrop          #+#    #+#             */
-/*   Updated: 2024/07/14 20:14:55 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/13 22:37:26 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,18 @@ bool	are_all_philos_done(t_table *table)
 	if (table->full_philo_n == table->philo_n)
 		ret = true;
 	pthread_mutex_unlock(&table->write_lock);
+	return (ret);
+}
+
+bool	someone_died(t_table *table)
+{
+	bool	ret;
+
+	ret = false;
+	pthread_mutex_lock(&table->death_lock);
+	if (table->someone_died)
+		ret = true;
+	pthread_mutex_unlock(&table->death_lock);
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/11 22:10:23 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/13 22:58:12 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include <pthread.h>
 # include <stdbool.h>
 # include <time.h>
+
+# include <stdio.h>
+# include <string.h>
+# include <stdlib.h> /* TODO Delete */
 
 # define SUCCESS 0
 # define FAIL 1
@@ -28,6 +32,30 @@
 
 # define FORK_TAKEN_MSG "has taken a fork"
 # define DIED_MSG "died"
+
+// Macro to lock a mutex with a debug print statement
+#define pthread_mutex_lock(mutex)                                                \
+	do {                                                                         \
+		int ret = pthread_mutex_lock(mutex);                                     \
+		if (ret != 0) {                                                          \
+			fprintf(stderr, "Thread %lu failed to lock mutex at %s:%d: %s\n",    \
+					pthread_self(), __FILE__, __LINE__, strerror(ret));          \
+			exit(EXIT_FAILURE);                                                  \
+		}                                                                        \
+		printf("Thread %lu locked mutex at %s:%d\n", pthread_self(), __FILE__, __LINE__); \
+	} while (0)
+
+// Macro to unlock a mutex with a debug print statement
+#define pthread_mutex_unlock(mutex)                                              \
+	do {                                                                         \
+		int ret = pthread_mutex_unlock(mutex);                                   \
+		if (ret != 0) {                                                          \
+			fprintf(stderr, "Thread %lu failed to unlock mutex at %s:%d: %s\n",  \
+					pthread_self(), __FILE__, __LINE__, strerror(ret));          \
+			exit(EXIT_FAILURE);                                                  \
+		}                                                                        \
+		printf("Thread %lu unlocked mutex at %s:%d\n", pthread_self(), __FILE__, __LINE__); \
+	} while (0)
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
@@ -106,6 +134,7 @@ bool		are_all_philos_done(t_table *table);
 void		update_full_philos(t_philo *philo, t_table *table);
 size_t		ft_strlen(const char *s);
 int			mutex_init_failed(char *file, char *func);
+bool		someone_died(t_table *table);
 int			destroy_philo(t_philo *philo);
 int			destroy_table(t_table *table);
 

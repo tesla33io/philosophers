@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 15:58:24 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/13 22:05:05 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/13 22:40:27 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,12 @@ int	wait_for(time_t wait_time, t_philo *phl, bool extra)
 	{
 		usleep(10);
 		time_diff = timestamp() - stime;
-		pthread_mutex_lock(&phl->table->death_lock);
 		if (extra && (time_diff >= phl->table->t_die
 				|| timestamp() - p_get_last_meal_t(phl) >= phl->table->t_die))
 		{
-			pthread_mutex_unlock(&phl->table->death_lock);
 			starvation_time(phl);
 			return (1);
 		}
-		pthread_mutex_unlock(&phl->table->death_lock);
 	}
 	return (0);
 }
