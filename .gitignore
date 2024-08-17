@@ -1,6 +1,9 @@
 # Local
 .vscode/
 .obsidian/
+.cache/
+compile_commands.json
+corefiles/
 
 # Prerequisites
 *.d
