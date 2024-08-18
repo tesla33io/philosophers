@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 15:59:29 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/13 22:49:11 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:54:28 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,26 @@ void	*philo_routine(void *philo_ref)
 	t_philo	*philo;
 
 	philo = philo_ref;
+	pthread_mutex_lock(&philo->table->ready_lock);
+	pthread_mutex_unlock(&philo->table->ready_lock);
 	if (philo->table->philo_n == 1)
 		return (alone_philo_simulation(philo));
-	if (philo->id % 2 == 0)
-		wait_for(10, philo, false);
+	if (philo->id % 2)
+		wait_for(philo->table->t_eat / 2, philo, false);
 	p_set_last_meal_t(philo, timestamp());
-	while (!someone_died(philo->table))
+	while (!someone_died(philo->table) && !are_all_philos_done(philo->table))
 	{
 		mealtime(philo);
-		log_state(philo, SLEEPING);
-		if (are_all_philos_done(philo->table) == true)
-			break ;
-		wait_for(philo->table->t_sleep, philo, true);
+		log_action(philo, SLEEP_MSG);
+		wait_for(philo->table->t_sleep, philo, false);
 		log_state(philo, THINKING);
+		wait_for(10, philo, false);
 	}
 	return (NULL);
 }
 
 void	mealtime(t_philo *philo)
 {
-	if (someone_died(philo->table))
-		return ;
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&(*philo->left_fork));
@@ -58,10 +57,10 @@ void	mealtime(t_philo *philo)
 	log_state(philo, EATING);
 	p_set_last_meal_t(philo, timestamp());
 	philo->meals_count++;
+	wait_for(philo->table->t_eat, philo, false);
 	update_full_philos(philo, philo->table);
-	wait_for(philo->table->t_eat, philo, true);
-	pthread_mutex_unlock(&(*philo->left_fork));
 	pthread_mutex_unlock(&(*philo->right_fork));
+	pthread_mutex_unlock(&(*philo->left_fork));
 	p_set_state(philo, THINKING);
 }
 

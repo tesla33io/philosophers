@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/13 22:58:12 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:53:53 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 # include <stdio.h>
 # include <string.h>
-# include <stdlib.h> /* TODO Delete */
 
 # define SUCCESS 0
 # define FAIL 1
@@ -32,40 +31,20 @@
 
 # define FORK_TAKEN_MSG "has taken a fork"
 # define DIED_MSG "died"
-
-// Macro to lock a mutex with a debug print statement
-#define pthread_mutex_lock(mutex)                                                \
-	do {                                                                         \
-		int ret = pthread_mutex_lock(mutex);                                     \
-		if (ret != 0) {                                                          \
-			fprintf(stderr, "Thread %lu failed to lock mutex at %s:%d: %s\n",    \
-					pthread_self(), __FILE__, __LINE__, strerror(ret));          \
-			exit(EXIT_FAILURE);                                                  \
-		}                                                                        \
-		printf("Thread %lu locked mutex at %s:%d\n", pthread_self(), __FILE__, __LINE__); \
-	} while (0)
-
-// Macro to unlock a mutex with a debug print statement
-#define pthread_mutex_unlock(mutex)                                              \
-	do {                                                                         \
-		int ret = pthread_mutex_unlock(mutex);                                   \
-		if (ret != 0) {                                                          \
-			fprintf(stderr, "Thread %lu failed to unlock mutex at %s:%d: %s\n",  \
-					pthread_self(), __FILE__, __LINE__, strerror(ret));          \
-			exit(EXIT_FAILURE);                                                  \
-		}                                                                        \
-		printf("Thread %lu unlocked mutex at %s:%d\n", pthread_self(), __FILE__, __LINE__); \
-	} while (0)
+# define EAT_MSG "is eating"
+# define SLEEP_MSG "is sleeping"
+# define THINK_MSG "is thinking"
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 
 enum	e_state
 {
-	EATING,
-	SLEEPING,
-	THINKING,
-	DEAD
+	EATING = 42,
+	SLEEPING = 43,
+	THINKING = 44,
+	DEAD = 45,
+	FINISHED = 46
 };
 
 typedef enum e_state	t_state;

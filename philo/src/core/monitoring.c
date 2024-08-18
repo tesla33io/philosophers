@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 17:29:48 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/11 22:43:43 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:46:43 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <stdio.h> /* TODO: DELETE */
 
 static int	check_for_starvation(t_table *table);
-static int	stop_simulation(t_table *table);
 
 /* Initialize monitoring thread */
 void	*wake_up_big_brother(void *table_ref)
@@ -40,7 +39,7 @@ void	*wake_up_big_brother(void *table_ref)
 		if (table->full_philo_n >= table->philo_n)
 		{
 			pthread_mutex_unlock(&table->write_lock);
-			stop_simulation(table);
+			destroy_table(table);
 			break ;
 		}
 		pthread_mutex_unlock(&table->write_lock);
@@ -66,17 +65,4 @@ static int	check_for_starvation(t_table *table)
 		i++;
 	}
 	return (0);
-}
-
-static int	stop_simulation(t_table *table)
-{
-	int	err;
-	int	i;
-
-	err = 0;
-	i = 0;
-	while (i < table->philo_n)
-		err |= pthread_detach(table->philos[i]->thrd);
-	err |= destroy_table(table);
-	return (err);
 }

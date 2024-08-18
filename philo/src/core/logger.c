@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 15:54:00 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/13 22:38:21 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:20:11 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 void	log_state(t_philo *philo, t_state state)
 {
 	pthread_mutex_lock(&philo->table->print_lock);
-	if (!philo || p_get_state(philo) == DEAD || someone_died(philo->table))
+	if (!philo || p_get_state(philo) == DEAD || someone_died(philo->table)
+		|| are_all_philos_done(philo->table))
 	{
 		pthread_mutex_unlock(&philo->table->print_lock);
 		return ;
@@ -40,7 +41,8 @@ void	log_state(t_philo *philo, t_state state)
 void	log_action(t_philo *philo, char *act)
 {
 	pthread_mutex_lock(&philo->table->print_lock);
-	if (philo && act && !someone_died(philo->table))
+	if (philo && act && !someone_died(philo->table)
+		&& !are_all_philos_done(philo->table))
 	{
 		printf("%li ", timestamp() - philo->table->t_start);
 		printf("%d %s\n", philo->id + 1, act);

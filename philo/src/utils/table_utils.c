@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 20:09:08 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/13 22:37:26 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 18:04:30 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ bool	are_all_philos_done(t_table *table)
 
 	pthread_mutex_lock(&table->write_lock);
 	ret = false;
-	if (table->full_philo_n == table->philo_n)
+	if (table->full_philo_n >= table->philo_n)
 		ret = true;
 	pthread_mutex_unlock(&table->write_lock);
 	return (ret);

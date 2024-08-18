@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 20:36:08 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/11 21:51:19 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:54:38 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	destroy_philo(t_philo *philo)
 	err = 0;
 	err |= pthread_mutex_destroy(&philo->p_write_lock);
 	err |= pthread_mutex_destroy(&philo->p_state_lock);
+	err |= pthread_mutex_destroy(philo->right_fork);
+	free(philo->right_fork);
 	free(philo);
 	return (err);
 }
@@ -35,14 +37,12 @@ int	destroy_table(t_table *table)
 	err = 0;
 	while (i < table->philo_n)
 	{
-		err |= pthread_mutex_destroy(table->forks[i]);
-		free(table->forks[i]);
-		err |= destroy_philo(table->philos[i]);
+		if (p_get_state(table->philos[i]) != THINKING)
+		{
+			wait_for(1, NULL, false);
+			continue ;
+		}
 		i++;
 	}
-	err |= pthread_mutex_destroy(&table->print_lock);
-	err |= pthread_mutex_destroy(&table->death_lock);
-	err |= pthread_mutex_destroy(&table->write_lock);
-	err |= pthread_mutex_destroy(&table->ready_lock);
 	return (err);
 }
