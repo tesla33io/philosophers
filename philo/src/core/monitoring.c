@@ -6,15 +6,13 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 17:29:48 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/18 20:46:43 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 22:00:24 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/philo.h"
 #include <pthread.h>
 #include <unistd.h>
-
-#include <stdio.h> /* TODO: DELETE */
 
 static int	check_for_starvation(t_table *table);
 
@@ -39,7 +37,6 @@ void	*wake_up_big_brother(void *table_ref)
 		if (table->full_philo_n >= table->philo_n)
 		{
 			pthread_mutex_unlock(&table->write_lock);
-			destroy_table(table);
 			break ;
 		}
 		pthread_mutex_unlock(&table->write_lock);

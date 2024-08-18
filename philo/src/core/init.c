@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:51:07 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/18 20:44:22 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 22:19:41 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ int	initialize_philos(t_table *table)
 	i = 0;
 	table->philos = malloc(sizeof(t_philo *) * table->philo_n);
 	if (!table->philos)
-		return (dprintf(2, "malloc failed at %s:%d\n", __FILE__, __LINE__));
+		return (malloc_failed(__FILE_NAME__, (char *) __func__));
 	if (initialize_forks(table) != 0)
 		return (-1);
 	while (i < table->philo_n)
 	{
 		philo = malloc(sizeof(*philo));
 		if (!philo)
-			return (dprintf(2, "malloc failed at %s:%d\n", __FILE__, __LINE__));
+			return (malloc_failed(__FILE_NAME__, (char *) __func__));
 		assign_values_to_philo(table, philo, i);
 		i++;
 	}
@@ -52,12 +52,12 @@ static int	initialize_forks(t_table *table)
 	i = 0;
 	table->forks = malloc(sizeof(pthread_mutex_t) * table->philo_n + 1);
 	if (!table->forks)
-		return (dprintf(2, "malloc failed at %s:%d\n", __FILE__, __LINE__));
+		return (malloc_failed(__FILE_NAME__, (char *) __func__));
 	while (i < table->philo_n)
 	{
 		fork = malloc(sizeof(*fork));
 		if (!fork)
-			return (dprintf(2, "malloc failed at %s:%d\n", __FILE__, __LINE__));
+			return (malloc_failed(__FILE_NAME__, (char *) __func__));
 		table->forks[i] = fork;
 		if (pthread_mutex_init(table->forks[i], NULL) != 0)
 			return (mutex_init_failed(__FILE_NAME__, (char *) __func__));
@@ -77,10 +77,10 @@ static void	assign_values_to_philo(t_table *table, t_philo *philo, int i)
 	philo->right_fork = table->forks[(i + 1) % table->philo_n];
 	philo->left_fork = table->forks[i];
 	if (pthread_mutex_init(&philo->p_write_lock, NULL) != 0
-		&& dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__))
+		&& mutex_init_failed(__FILE_NAME__, (char *) __func__))
 		return ;
 	if (pthread_mutex_init(&philo->p_state_lock, NULL) != 0
-		&& dprintf(2, "mutex init failed at %s:%d\n", __FILE__, __LINE__))
+		&& mutex_init_failed(__FILE_NAME__, (char *) __func__))
 		return ;
 	table->philos[i] = philo;
 }

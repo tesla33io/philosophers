@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:41:11 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/18 20:53:53 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 22:28:46 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 # include <pthread.h>
 # include <stdbool.h>
 # include <time.h>
-
-# include <stdio.h>
-# include <string.h>
 
 # define SUCCESS 0
 # define FAIL 1
@@ -40,11 +37,11 @@ typedef struct s_philo	t_philo;
 
 enum	e_state
 {
-	EATING = 42,
-	SLEEPING = 43,
-	THINKING = 44,
-	DEAD = 45,
-	FINISHED = 46
+	EATING,
+	SLEEPING,
+	THINKING,
+	DEAD,
+	FINISHED
 };
 
 typedef enum e_state	t_state;
@@ -108,18 +105,15 @@ int			ft_strisnum(const char *str);
 int			ft_atoi(const char *arg);
 void		print_usage(void);
 time_t		timestamp(void);
-int			wait_for(time_t wait_time, t_philo *philo, bool extra);
+int			wait_for(time_t wait_time);
+time_t		think_time(t_table *table);
 bool		are_all_philos_done(t_table *table);
 void		update_full_philos(t_philo *philo, t_table *table);
 size_t		ft_strlen(const char *s);
 int			mutex_init_failed(char *file, char *func);
+int			malloc_failed(char *file, char *func);
 bool		someone_died(t_table *table);
-int			destroy_philo(t_philo *philo);
-int			destroy_table(t_table *table);
-
-/* Debug functions */
-
-void		print_table(t_table *table);
-void		print_philo(t_philo *philo);
+int			destroy_philos(t_table *t);
+int			destroy_forks(t_table *table);
 
 #endif /* PHILO_H */

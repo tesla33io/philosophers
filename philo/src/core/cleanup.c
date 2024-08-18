@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 20:36:08 by astavrop          #+#    #+#             */
-/*   Updated: 2024/08/18 20:54:38 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/08/18 22:13:02 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,33 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-int	destroy_philo(t_philo *philo)
-{
-	int	err;
-
-	err = 0;
-	err |= pthread_mutex_destroy(&philo->p_write_lock);
-	err |= pthread_mutex_destroy(&philo->p_state_lock);
-	err |= pthread_mutex_destroy(philo->right_fork);
-	free(philo->right_fork);
-	free(philo);
-	return (err);
-}
-
-int	destroy_table(t_table *table)
+int	destroy_philos(t_table *t)
 {
 	int	i;
-	int	err;
 
 	i = 0;
-	err = 0;
-	while (i < table->philo_n)
+	while (i < t->philo_n)
 	{
-		if (p_get_state(table->philos[i]) != THINKING)
-		{
-			wait_for(1, NULL, false);
-			continue ;
-		}
+		pthread_mutex_destroy(&t->philos[i]->p_write_lock);
+		pthread_mutex_destroy(&t->philos[i]->p_state_lock);
+		free(t->philos[i]);
 		i++;
 	}
-	return (err);
+	free(t->philos);
+	return (0);
+}
+
+int	destroy_forks(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philo_n)
+	{
+		pthread_mutex_destroy(table->forks[i]);
+		free(table->forks[i]);
+		i++;
+	}
+	free(table->forks);
+	return (0);
 }
